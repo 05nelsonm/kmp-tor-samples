@@ -1,12 +1,19 @@
 [versions]
+androidx-activity-compose = "1.9.1"
 androidx-test-core = "1.6.1"
 androidx-test-runner = "1.6.2"
 
 gradle-android = "8.2.2"
-gradle-kmp-configuration = "0.2.2"
-gradle-kotlin = "1.9.24"
+gradle-compose = "1.6.11"
+gradle-kmp-configuration = "0.3.1-SNAPSHOT"
+gradle-kotlin = "2.0.0"
+
+jetbrains-lifecycle = "2.8.0"
+
+kotlinx-coroutines = "1.8.1"
 
 [libraries]
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test-runner" }
 
@@ -14,7 +21,14 @@ gradle-android = { module = "com.android.tools.build:gradle", version.ref = "gra
 gradle-kmp-configuration = { module = "io.matthewnelson:gradle-kmp-configuration-plugin", version.ref = "gradle-kmp-configuration" }
 gradle-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "gradle-kotlin" }
 
+jetbrains-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "jetbrains-lifecycle" }
+jetbrains-lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "jetbrains-lifecycle" }
+
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+
 [plugins]
 android-app = { id = "com.android.application", version.ref = "gradle-android" }
 android-library = { id = "com.android.library", version.ref = "gradle-android" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "gradle-kotlin" }
+jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "gradle-compose" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "gradle-kotlin" }
