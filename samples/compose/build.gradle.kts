@@ -65,10 +65,23 @@ kmpConfiguration {
                 dependencies {
                     implementation(libs.androidx.activity.compose)
                     implementation(compose.dependencies.preview)
+
+                    // Optional dependency for running in Android Foreground
+                    // Service. Not necessary as can run w/o it.
+                    implementation(libs.kmp.tor.runtime.serviceui)
                 }
 
                 project.dependencies {
                     "debugImplementation"(compose.dependencies.uiTooling)
+                }
+            }
+
+            sourceSetTest {
+                dependencies {
+
+                    // Tor binary resources for Android Unit Tests (just
+                    // the jvm dependencies packaged for android)
+                    implementation(libs.kmp.tor.resource.android.unit.test)
                 }
             }
 
@@ -118,6 +131,12 @@ kmpConfiguration {
                     implementation(compose.dependencies.ui)
                     implementation(compose.dependencies.components.resources)
                     implementation(compose.dependencies.components.uiToolingPreview)
+
+                    // TorRuntime
+                    implementation(libs.kmp.tor.runtime)
+
+                    // Pre-compiled tor binary resources to provide to TorRuntime
+                    implementation(libs.kmp.tor.resource.tor)
                 }
             }
         }

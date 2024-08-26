@@ -10,6 +10,8 @@ gradle-kotlin = "2.0.0"
 
 jetbrains-lifecycle = "2.8.0"
 
+kmp-tor-runtime = "2.0.0-alpha01-SNAPSHOT"
+kmp-tor-resource = "408.10.0-SNAPSHOT"
 kotlinx-coroutines = "1.8.1"
 
 [libraries]
@@ -24,6 +26,10 @@ gradle-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.
 jetbrains-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "jetbrains-lifecycle" }
 jetbrains-lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "jetbrains-lifecycle" }
 
+kmp-tor-resource-tor = { module = "io.matthewnelson.kmp-tor:resource-tor", version.ref = "kmp-tor-resource" }
+kmp-tor-resource-android-unit-test = { module = "io.matthewnelson.kmp-tor:resource-android-unit-test", version.ref = "kmp-tor-resource" }
+kmp-tor-runtime = { module = "io.matthewnelson.kmp-tor:runtime", version.ref = "kmp-tor-runtime" }
+kmp-tor-runtime-serviceui = { module = "io.matthewnelson.kmp-tor:runtime-service-ui", version.ref = "kmp-tor-runtime" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 
 [plugins]

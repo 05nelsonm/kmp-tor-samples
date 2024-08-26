@@ -16,7 +16,17 @@
  * limitations under the License.
  **/
 -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- https://github.com/05nelsonm/kmp-tor/blob/master/library/runtime-service/src/androidMain/AndroidManifest.xml -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- https://github.com/05nelsonm/kmp-tor/blob/master/library/runtime-service-ui/src/androidMain/AndroidManifest.xml -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <application
         android:allowBackup="true"
@@ -35,6 +45,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- https://github.com/05nelsonm/kmp-tor/blob/master/library/runtime-service-ui/src/androidMain/AndroidManifest.xml -->
+        <service
+            android:name="io.matthewnelson.kmp.tor.runtime.service.TorService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="specialUse"
+            tools:node="merge">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="
+                    \nYour explanation
+                    \nfor special use
+                    \nhere" />
+        </service>
     </application>
 
 </manifest>

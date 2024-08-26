@@ -10,6 +10,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import io.matthewnelson.kmp.tor.runtime.Action
+import io.matthewnelson.kmp.tor.runtime.core.OnFailure
+import io.matthewnelson.kmp.tor.runtime.core.OnSuccess
 import kmp_tor_samples.samples.compose.generated.resources.Res
 import kmp_tor_samples.samples.compose.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
@@ -26,6 +29,14 @@ fun App() {
             }
             AnimatedVisibility(showContent) {
                 val greeting = remember { Greeting().greet() }
+
+                // TODO
+                Tor.enqueue(
+                    Action.StartDaemon,
+                    OnFailure.noOp(),
+                    OnSuccess.noOp()
+                )
+
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Image(painterResource(Res.drawable.compose_multiplatform), null)
                     Text("Compose: $greeting")
