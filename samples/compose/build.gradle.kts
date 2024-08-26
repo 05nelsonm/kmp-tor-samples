@@ -115,7 +115,16 @@ kmpConfiguration {
             compileTargetCompatibility = JavaVersion.VERSION_11
         }
 
-        iosAll()
+        fun KotlinNativeTarget.configure() {
+            binaries.framework {
+                baseName = "ComposeApp"
+                isStatic = true
+            }
+        }
+
+        iosArm64 { target { configure() } }
+        iosSimulatorArm64 { target { configure() } }
+        iosX64 { target { configure() } }
 
         common {
             pluginIds(libs.plugins.compose.compiler.get().pluginId)
@@ -137,17 +146,6 @@ kmpConfiguration {
 
                     // Pre-compiled tor binary resources to provide to TorRuntime
                     implementation(libs.kmp.tor.resource.tor)
-                }
-            }
-        }
-
-        kotlin {
-            targets.filterIsInstance<KotlinNativeTarget>().forEach { target ->
-                if (!target.konanTarget.family.isAppleFamily) return@forEach
-
-                target.binaries.framework {
-                    baseName = "ComposeApp"
-                    isStatic = true
                 }
             }
         }
