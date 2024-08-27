@@ -19,6 +19,7 @@ package io.matthewnelson.kmp.tor.sample.compose
 
 import io.matthewnelson.kmp.tor.runtime.RuntimeEvent
 import io.matthewnelson.kmp.tor.runtime.TorRuntime
+import io.matthewnelson.kmp.tor.runtime.core.OnEvent
 
 // Use your favorite dependency injection here, if desired.
 expect fun runtimeEnvironment(): TorRuntime.Environment
@@ -26,23 +27,37 @@ expect fun runtimeEnvironment(): TorRuntime.Environment
 // Read documentation for further options
 // Use your favorite dependency injection framework here
 val Tor: TorRuntime by lazy {
-    TorRuntime.Builder(runtimeEnvironment()) {
+    TorRuntime.Builder(
+        environment = runtimeEnvironment().also { it.debug = true },
+        block = {
 
-        // Log all output to sys out
-        RuntimeEvent.entries().forEach { entry ->
-            // ERROR observer **MUST** be present for
-            // UncaughtException, otherwise may cause crash.
-            if (entry is RuntimeEvent.ERROR) {
-                observerStatic(entry) { t -> t.printStackTrace() }
-            } else {
+            // TorRuntime.Environment.defaultExecutor auto-defaults to
+            // uses OnEvent.Executor.Main when Dispatchers.Main is
+            // available on the system (which it is here for all platforms).
+            //
+            // For this example, all logs are going to be piped to a DB
+            // which will be observed from main UI as a scrollable thing.
+            val executor = OnEvent.Executor.Immediate
 
-                // Just toString everything else...
-                observerStatic(entry) { event -> println(event.toString()) }
+            RuntimeEvent.entries().forEach { event ->
+                // ERROR observer **MUST** be present for
+                // UncaughtException, otherwise may cause crash.
+                if (event is RuntimeEvent.ERROR) {
+                    observerStatic(event, executor) { t ->
+                        LogDB.insert(event, t.stackTraceToString())
+                    }
+                } else {
+
+                    // Just toString everything else...
+                    observerStatic(event, executor) { data ->
+                        LogDB.insert(event, data.toString())
+                    }
+                }
             }
-        }
 
-        config { environment ->
-            // Configure further...
-        }
-    }
+            config { environment ->
+                // Configure further...
+            }
+        },
+    )
 }

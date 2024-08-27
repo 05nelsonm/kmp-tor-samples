@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+import io.matthewnelson.kmp.configuration.extension.container.target.TargetIosContainer
+import io.toxicity.sqlite.mc.gradle.SQLiteMCExtension
 import org.jetbrains.compose.ComposeExtension
 import org.jetbrains.compose.desktop.DesktopExtension
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
@@ -82,6 +84,7 @@ kmpConfiguration {
                     // Tor binary resources for Android Unit Tests (just
                     // the jvm dependencies packaged for android)
                     implementation(libs.kmp.tor.resource.android.unit.test)
+                    implementation(libs.toxicity.sqlitemc.android.unit.test)
                 }
             }
 
@@ -115,20 +118,23 @@ kmpConfiguration {
             compileTargetCompatibility = JavaVersion.VERSION_11
         }
 
-        fun KotlinNativeTarget.configure() {
-            binaries.framework {
-                baseName = "ComposeApp"
-                isStatic = true
+        fun <T: KotlinNativeTarget> TargetIosContainer<T>.configure() {
+            target {
+                binaries.framework {
+                    baseName = "ComposeApp"
+                    isStatic = true
+                }
             }
         }
 
-        iosArm64 { target { configure() } }
-        iosSimulatorArm64 { target { configure() } }
-        iosX64 { target { configure() } }
+        iosArm64 { configure() }
+        iosSimulatorArm64 { configure() }
+        iosX64 { configure() }
 
         common {
             pluginIds(libs.plugins.compose.compiler.get().pluginId)
             pluginIds(libs.plugins.jetbrains.compose.get().pluginId)
+            pluginIds(libs.plugins.toxicity.sqlitemc.get().pluginId)
 
             sourceSetMain {
                 dependencies {
@@ -146,6 +152,22 @@ kmpConfiguration {
 
                     // Pre-compiled tor binary resources to provide to TorRuntime
                     implementation(libs.kmp.tor.resource.tor)
+
+                    implementation(libs.paging.compose)
+                    implementation(libs.sqldelight.paging3)
+                }
+            }
+        }
+
+        kotlin {
+            // Just because it's super simple to set up with
+            // data source and pipe to UI.
+            extensions.configure<SQLiteMCExtension>("sqliteMC") {
+                databases {
+                    create("LogsDatabase") {
+                        packageName.set("io.matthewnelson.kmp.tor.sample.compose")
+                        srcDirs("src/sqldelight")
+                    }
                 }
             }
         }

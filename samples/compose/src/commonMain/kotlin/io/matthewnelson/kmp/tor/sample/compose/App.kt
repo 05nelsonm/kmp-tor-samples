@@ -1,47 +1,149 @@
 package io.matthewnelson.kmp.tor.sample.compose
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import app.cash.paging.compose.collectAsLazyPagingItems
 import io.matthewnelson.kmp.tor.runtime.Action
+import io.matthewnelson.kmp.tor.runtime.RuntimeEvent
 import io.matthewnelson.kmp.tor.runtime.core.OnFailure
 import io.matthewnelson.kmp.tor.runtime.core.OnSuccess
-import kmp_tor_samples.samples.compose.generated.resources.Res
-import kmp_tor_samples.samples.compose.generated.resources.compose_multiplatform
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
+    MaterialTheme(colors = darkColors()) {
         var showContent by remember { mutableStateOf(false) }
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
+        val listState = rememberLazyListState()
+
+        Box(
+            modifier = Modifier.fillMaxSize().padding(8.dp),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            AnimatedVisibility(showContent, Modifier.fillMaxHeight()) {
+                val logItems = LogDB.logItems.collectAsLazyPagingItems()
+
+                LazyColumn(
+                    modifier = Modifier.padding(bottom = 48.dp),
+                    state = listState,
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    items(count = logItems.itemCount) { index ->
+                        val item = logItems[index]
+                        LogCardItem(item)
+                    }
+                }
             }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
 
-                // TODO
-                Tor.enqueue(
-                    Action.StartDaemon,
-                    OnFailure.noOp(),
-                    OnSuccess.noOp()
-                )
+            if (!showContent) {
+                Button(
+                    onClick = {
+                        Tor.enqueue(
+                            Action.StartDaemon,
+                            OnFailure.noOp(),
+                            OnSuccess.noOp()
+                        )
 
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
+                        showContent = !showContent
+                    }
+                ) {
+                    Text("Start Tor")
+                }
+            } else {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    Button(
+                        onClick = {
+                            Tor.enqueue(
+                                Action.StopDaemon,
+                                OnFailure.noOp(),
+                                OnSuccess.noOp(),
+                            )
+                        }
+                    ) {
+                        Text("Stop Tor")
+                    }
+
+                    Spacer(Modifier.width(8.dp))
+
+                    Button(
+                        onClick = {
+                            Tor.enqueue(
+                                Action.StartDaemon,
+                                OnFailure.noOp(),
+                                OnSuccess.noOp(),
+                            )
+                        }
+                    ) {
+                        Text("Start Tor")
+                    }
+
+                    Spacer(Modifier.width(8.dp))
+
+                    Button(
+                        onClick = {
+                            Tor.enqueue(
+                                Action.RestartDaemon,
+                                OnFailure.noOp(),
+                                OnSuccess.noOp(),
+                            )
+                        }
+                    ) {
+                        Text("Restart Tor")
+                    }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun LogCardItem(item: LogDbo?) {
+    var textColor = Color.White
+
+    @Suppress("USELESS_CAST")
+    val bg = when (item?.type as? RuntimeEvent<*>) {
+        is RuntimeEvent.ERROR -> Color.Red
+        is RuntimeEvent.LOG.DEBUG -> {
+            var color = Color.Blue
+            if (item.data_.startsWith("RealTorCtrl")) {
+                color = color.copy(alpha = 0.5f)
+            }
+            color
+        }
+        is RuntimeEvent.LOG.INFO -> {
+            textColor = Color.DarkGray
+            Color.Yellow
+        }
+        is RuntimeEvent.LOG.WARN -> Color.Red.copy(alpha = 0.75f)
+        is RuntimeEvent.PROCESS.READY -> {
+            textColor = Color.DarkGray
+            Color.Green
+        }
+        else -> Color.DarkGray
+    }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        backgroundColor = bg,
+        elevation = 8.dp
+    ) {
+        Text(
+            modifier = Modifier.padding(4.dp),
+            text = item?.data_ ?: "",
+            fontSize = 12.sp,
+            color = textColor,
+        )
     }
 }

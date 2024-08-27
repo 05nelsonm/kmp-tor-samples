@@ -60,6 +60,9 @@ private val ServiceConfig: TorServiceConfig by lazy {
         },
     )
 
+    // So UI logs will also be present...
+    uiFactory.debug = true
+
     TorServiceConfig.Foreground.Builder(uiFactory) {
         // Customize further...
     }
