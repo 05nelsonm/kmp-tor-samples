@@ -21,7 +21,6 @@ import io.matthewnelson.kmp.tor.runtime.service.TorServiceConfig
 import io.matthewnelson.kmp.tor.runtime.service.TorServiceUI
 import io.matthewnelson.kmp.tor.runtime.service.ui.KmpTorServiceUI
 
-
 actual fun runtimeEnvironment(): TorRuntime.Environment = AndroidEnvironment
 
 // Read documentation for further configuration
