@@ -24,6 +24,8 @@ import io.matthewnelson.kmp.tor.runtime.core.OnEvent
 // Use your favorite dependency injection here, if desired.
 expect fun runtimeEnvironment(): TorRuntime.Environment
 
+const val LOG_HOLDER_NAME = "default"
+
 // Read documentation for further options
 // Use your favorite dependency injection framework here
 val Tor: TorRuntime by lazy {
@@ -31,26 +33,30 @@ val Tor: TorRuntime by lazy {
         environment = runtimeEnvironment().also { it.debug = true },
         block = {
 
-            // TorRuntime.Environment.defaultExecutor auto-defaults to
-            // uses OnEvent.Executor.Main when Dispatchers.Main is
-            // available on the system (which it is here for all platforms).
+            // TorRuntime.Environment.BuilderScope.defaultExecutor auto-defaults
+            // to OnEvent.Executor.Main whenever Dispatchers.Main is available
+            // on the system (which it is here for all platforms).
             //
-            // For this example, all logs are going to be piped to a DB
-            // which will be observed from main UI as a scrollable thing.
-            val executor = OnEvent.Executor.Immediate
+            // But just for expressiveness, define here individually for all
+            // observers b/c the LogItem.Holder is not implemented in a thread
+            // safe manner.
+            val executor = OnEvent.Executor.Main
+
+            // Pipe all logs to UI
+            val logs = LogItem.Holder.getOrCreate(LOG_HOLDER_NAME)
 
             RuntimeEvent.entries().forEach { event ->
                 // ERROR observer **MUST** be present for
                 // UncaughtException, otherwise may cause crash.
                 if (event is RuntimeEvent.ERROR) {
                     observerStatic(event, executor) { t ->
-                        LogDB.insert(event, t.stackTraceToString())
+                        logs.add(event, t.stackTraceToString())
                     }
                 } else {
 
                     // Just toString everything else...
                     observerStatic(event, executor) { data ->
-                        LogDB.insert(event, data.toString())
+                        logs.add(event, data.toString())
                     }
                 }
             }

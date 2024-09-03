@@ -14,7 +14,6 @@
  * limitations under the License.
  **/
 import io.matthewnelson.kmp.configuration.extension.container.target.TargetIosContainer
-import io.toxicity.sqlite.mc.gradle.SQLiteMCExtension
 import org.jetbrains.compose.ComposeExtension
 import org.jetbrains.compose.desktop.DesktopExtension
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
@@ -69,7 +68,10 @@ kmpConfiguration {
                     implementation(compose.dependencies.preview)
 
                     // Optional dependency for running in Android Foreground
-                    // Service. Not necessary as can run w/o it.
+                    // Service. Not necessary as can run background service
+                    // w/o it via the `kmp-tor:runtime-service` dependency,
+                    // or just use the `kmp-tor:runtime` from commonMain to
+                    // do no service.
                     implementation(libs.kmp.tor.runtime.serviceui)
                 }
 
@@ -84,7 +86,6 @@ kmpConfiguration {
                     // Tor binary resources for Android Unit Tests (just
                     // the jvm dependencies packaged for android)
                     implementation(libs.kmp.tor.resource.android.unit.test)
-                    implementation(libs.toxicity.sqlitemc.android.unit.test)
                 }
             }
 
@@ -134,7 +135,6 @@ kmpConfiguration {
         common {
             pluginIds(libs.plugins.compose.compiler.get().pluginId)
             pluginIds(libs.plugins.jetbrains.compose.get().pluginId)
-            pluginIds(libs.plugins.toxicity.sqlitemc.get().pluginId)
 
             sourceSetMain {
                 dependencies {
@@ -152,22 +152,12 @@ kmpConfiguration {
 
                     // Pre-compiled tor binary resources to provide to TorRuntime
                     implementation(libs.kmp.tor.resource.tor)
-
-                    implementation(libs.paging.compose)
-                    implementation(libs.sqldelight.paging3)
                 }
             }
-        }
 
-        kotlin {
-            // Just because it's super simple to set up with
-            // data source and pipe to UI.
-            extensions.configure<SQLiteMCExtension>("sqliteMC") {
-                databases {
-                    create("LogsDatabase") {
-                        packageName.set("io.matthewnelson.kmp.tor.sample.compose")
-                        srcDirs("src/sqldelight")
-                    }
+            sourceSetTest {
+                dependencies {
+                    implementation(kotlin("test"))
                 }
             }
         }

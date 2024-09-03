@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.cash.paging.compose.collectAsLazyPagingItems
 import io.matthewnelson.kmp.tor.runtime.Action
 import io.matthewnelson.kmp.tor.runtime.RuntimeEvent
 import io.matthewnelson.kmp.tor.runtime.core.OnFailure
@@ -30,14 +29,14 @@ fun App() {
             contentAlignment = Alignment.BottomCenter
         ) {
             AnimatedVisibility(showContent, Modifier.fillMaxHeight()) {
-                val logItems = LogDB.logItems.collectAsLazyPagingItems()
+                val logItems by remember { LogItem.Holder.getOrCreate(LOG_HOLDER_NAME).items }
 
                 LazyColumn(
                     modifier = Modifier.padding(bottom = 48.dp),
                     state = listState,
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
-                    items(count = logItems.itemCount) { index ->
+                    items(count = logItems.size, key = { logItems[it].id }) { index ->
                         val item = logItems[index]
                         LogCardItem(item)
                     }
@@ -109,15 +108,15 @@ fun App() {
 }
 
 @Composable
-private fun LogCardItem(item: LogDbo?) {
+private fun LogCardItem(item: LogItem?) {
     var textColor = Color.White
 
-    @Suppress("USELESS_CAST")
-    val bg = when (item?.type as? RuntimeEvent<*>) {
+    val bg = when (item?.event) {
+        is RuntimeEvent.PROCESS.STDERR,
         is RuntimeEvent.ERROR -> Color.Red
         is RuntimeEvent.LOG.DEBUG -> {
             var color = Color.Blue
-            if (item.data_.startsWith("RealTorCtrl")) {
+            if (item.data.startsWith("RealTorCtrl")) {
                 color = color.copy(alpha = 0.5f)
             }
             color
@@ -141,7 +140,7 @@ private fun LogCardItem(item: LogDbo?) {
     ) {
         Text(
             modifier = Modifier.padding(4.dp),
-            text = item?.data_ ?: "",
+            text = item?.data ?: "",
             fontSize = 12.sp,
             color = textColor,
         )

@@ -14,10 +14,6 @@ kmp-tor-runtime             = "2.0.0-alpha01-SNAPSHOT"
 kmp-tor-resource            = "408.12.0-SNAPSHOT"
 kotlinx-coroutines          = "1.8.1"
 
-paging                      = "3.3.0-alpha02-0.5.1"
-sqldelight                  = "2.0.2"
-toxicity-sqlitemc           = "2.0.2-1.8.7-0"
-
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-core" }
@@ -36,14 +32,9 @@ kmp-tor-runtime = { module = "io.matthewnelson.kmp-tor:runtime", version.ref = "
 kmp-tor-runtime-serviceui = { module = "io.matthewnelson.kmp-tor:runtime-service-ui", version.ref = "kmp-tor-runtime" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 
-paging-compose = { module = "app.cash.paging:paging-compose-common", version.ref = "paging" }
-sqldelight-paging3 = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqldelight" }
-toxicity-sqlitemc-android-unit-test = { module = "io.toxicity.sqlite-mc:android-unit-test", version.ref = "toxicity-sqlitemc" }
-
 [plugins]
 android-app = { id = "com.android.application", version.ref = "gradle-android" }
 android-library = { id = "com.android.library", version.ref = "gradle-android" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "gradle-kotlin" }
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "gradle-compose" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "gradle-kotlin" }
-toxicity-sqlitemc = { id = "io.toxicity.sqlite-mc", version.ref = "toxicity-sqlitemc" }
