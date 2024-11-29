@@ -18,5 +18,6 @@ plugins {
     alias(libs.plugins.android.library) apply(false)
     alias(libs.plugins.compose.compiler) apply(false)
     alias(libs.plugins.jetbrains.compose) apply(false)
+    alias(libs.plugins.kmp.tor.resource.frameworks)
     alias(libs.plugins.kotlin.multiplatform) apply(false)
 }

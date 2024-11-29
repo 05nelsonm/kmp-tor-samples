@@ -15,10 +15,8 @@
  **/
 package io.matthewnelson.kmp.tor.sample.compose
 
-import io.matthewnelson.kmp.file.absoluteFile
-import io.matthewnelson.kmp.file.resolve
-import io.matthewnelson.kmp.file.toFile
-import io.matthewnelson.kmp.tor.resource.tor.TorResources
+import io.matthewnelson.kmp.file.*
+import io.matthewnelson.kmp.tor.resource.noexec.tor.ResourceLoaderTorNoExec
 import io.matthewnelson.kmp.tor.runtime.TorRuntime
 import platform.Foundation.NSCachesDirectory
 import platform.Foundation.NSLibraryDirectory
@@ -48,8 +46,6 @@ private val IosEnvironment: TorRuntime.Environment by lazy {
     TorRuntime.Environment.Builder(
         workDirectory = library.resolve("kmptor"),
         cacheDirectory = caches.resolve("kmptor"),
-        installer = { dir -> TorResources(dir) },
-    ) {
-        // Configure further...
-    }
+        loader = ResourceLoaderTorNoExec::getOrCreate,
+    )
 }

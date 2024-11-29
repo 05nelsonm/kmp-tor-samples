@@ -18,7 +18,7 @@ package io.matthewnelson.kmp.tor.sample.compose
 import io.matthewnelson.kmp.file.SysTempDir
 import io.matthewnelson.kmp.file.resolve
 import io.matthewnelson.kmp.file.toFile
-import io.matthewnelson.kmp.tor.resource.tor.TorResources
+import io.matthewnelson.kmp.tor.resource.exec.tor.ResourceLoaderTorExec
 import io.matthewnelson.kmp.tor.runtime.TorRuntime
 
 actual fun runtimeEnvironment(): TorRuntime.Environment = JvmEnvironment
@@ -35,8 +35,6 @@ private val JvmEnvironment: TorRuntime.Environment by lazy {
     TorRuntime.Environment.Builder(
         workDirectory = appDir.resolve("kmptor"),
         cacheDirectory = appDir.resolve("cache").resolve("kmptor"),
-        installer = { dir -> TorResources(dir) }
-    ) {
-        // Configure further...
-    }
+        loader = ResourceLoaderTorExec::getOrCreate,
+    )
 }

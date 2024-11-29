@@ -15,7 +15,7 @@
  **/
 package io.matthewnelson.kmp.tor.sample.compose
 
-import io.matthewnelson.kmp.tor.resource.tor.TorResources
+import io.matthewnelson.kmp.tor.resource.exec.tor.ResourceLoaderTorExec
 import io.matthewnelson.kmp.tor.runtime.TorRuntime
 import io.matthewnelson.kmp.tor.runtime.service.TorServiceConfig
 import io.matthewnelson.kmp.tor.runtime.service.TorServiceUI
@@ -26,7 +26,7 @@ actual fun runtimeEnvironment(): TorRuntime.Environment = AndroidEnvironment
 // Read documentation for further configuration
 private val AndroidEnvironment: TorRuntime.Environment by lazy {
     // Roll with all the defaults
-    ServiceConfig.newEnvironment { dir -> TorResources(dir) }
+    ServiceConfig.newEnvironment(ResourceLoaderTorExec::getOrCreate)
 }
 
 // Read documentation for further configuration

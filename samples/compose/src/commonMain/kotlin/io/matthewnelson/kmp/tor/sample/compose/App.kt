@@ -48,7 +48,7 @@ fun App() {
                     onClick = {
                         Tor.enqueue(
                             Action.StartDaemon,
-                            OnFailure.noOp(),
+                            { throw it },
                             OnSuccess.noOp()
                         )
 
@@ -66,7 +66,7 @@ fun App() {
                         onClick = {
                             Tor.enqueue(
                                 Action.StopDaemon,
-                                OnFailure.noOp(),
+                                OnFailure { throw it },
                                 OnSuccess.noOp(),
                             )
                         }
@@ -80,7 +80,7 @@ fun App() {
                         onClick = {
                             Tor.enqueue(
                                 Action.StartDaemon,
-                                OnFailure.noOp(),
+                                OnFailure { throw it },
                                 OnSuccess.noOp(),
                             )
                         }
@@ -94,7 +94,7 @@ fun App() {
                         onClick = {
                             Tor.enqueue(
                                 Action.RestartDaemon,
-                                OnFailure.noOp(),
+                                OnFailure { throw it },
                                 OnSuccess.noOp(),
                             )
                         }
@@ -112,7 +112,6 @@ private fun LogCardItem(item: LogItem?) {
     var textColor = Color.White
 
     val bg = when (item?.event) {
-        is RuntimeEvent.PROCESS.STDERR,
         is RuntimeEvent.ERROR -> Color.Red
         is RuntimeEvent.LOG.DEBUG -> {
             var color = Color.Blue
@@ -126,7 +125,7 @@ private fun LogCardItem(item: LogItem?) {
             Color.Yellow
         }
         is RuntimeEvent.LOG.WARN -> Color.Red.copy(alpha = 0.75f)
-        is RuntimeEvent.PROCESS.READY -> {
+        is RuntimeEvent.READY -> {
             textColor = Color.DarkGray
             Color.Green
         }

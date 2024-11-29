@@ -85,7 +85,7 @@ kmpConfiguration {
 
                     // Tor binary resources for Android Unit Tests (just
                     // the jvm dependencies packaged for android)
-                    implementation(libs.kmp.tor.resource.android.unit.test)
+                    implementation(libs.kmp.tor.resource.android.unit.test.tor)
                 }
             }
 
@@ -151,7 +151,8 @@ kmpConfiguration {
                     implementation(libs.kmp.tor.runtime)
 
                     // Pre-compiled tor binary resources to provide to TorRuntime
-                    implementation(libs.kmp.tor.resource.tor)
+                    implementation(libs.kmp.tor.resource.exec.tor)
+                    implementation(libs.kmp.tor.resource.noexec.tor)
                 }
             }
 
