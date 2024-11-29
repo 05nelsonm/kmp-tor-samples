@@ -55,6 +55,9 @@ private val ServiceConfig: TorServiceConfig by lazy {
                 // Customize further...
             }
 
+            // Disable notification on-click app open (if desired)
+            contentIntent = null
+
             // Customize further...
         },
     )
