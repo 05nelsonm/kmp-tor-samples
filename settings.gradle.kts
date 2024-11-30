@@ -35,6 +35,7 @@ includeBuild("build-logic")
 
 listOf(
     "compose",
+    "javafx",
 ).forEach { module ->
     include(":samples:$module")
 }
