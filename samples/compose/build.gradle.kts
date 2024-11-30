@@ -43,6 +43,8 @@ kmpConfiguration {
                     targetSdk = 34
                     versionCode = 1
                     versionName = "1.0.0"
+
+                    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 }
 
                 packaging {
@@ -96,6 +98,12 @@ kmpConfiguration {
                     // Tor binary resources for Android Unit Tests (just
                     // the jvm dependencies packaged for android)
                     implementation(libs.kmp.tor.resource.android.unit.test.tor)
+                }
+            }
+
+            sourceSetTestInstrumented {
+                dependencies {
+                    implementation(libs.androidx.test.runner)
                 }
             }
 
@@ -187,6 +195,7 @@ kmpConfiguration {
             sourceSetTest {
                 dependencies {
                     implementation(kotlin("test"))
+                    implementation(libs.kotlinx.coroutines.test)
                 }
             }
         }
