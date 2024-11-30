@@ -15,4 +15,26 @@
  **/
 package io.matthewnelson.kmp.tor.sample.compose
 
-class TorJvmUnitTest: TorBaseTest()
+import io.matthewnelson.kmp.file.toFile
+import org.junit.AfterClass
+import org.junit.BeforeClass
+
+class TorJvmUnitTest: TorBaseTest() {
+
+    companion object {
+
+        private val HOME = System.getProperty("user.home")
+
+        @JvmStatic
+        @BeforeClass
+        fun setupClazz() {
+            System.setProperty("user.home", "".toFile().absoluteFile.resolve("build/kmp_tor_jvm_test").path)
+        }
+
+        @JvmStatic
+        @AfterClass
+        fun tearDownClazz() {
+            System.setProperty("user.home", HOME)
+        }
+    }
+}

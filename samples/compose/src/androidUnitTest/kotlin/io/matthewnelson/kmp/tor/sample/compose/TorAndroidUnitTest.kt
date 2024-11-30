@@ -39,7 +39,7 @@ class TorAndroidUnitTest: TorBaseTest() {
 
         @JvmStatic
         @AfterClass
-        fun teardownClazz() {
+        fun tearDownClazz() {
             Dispatchers.resetMain()
             mainThreadSurrogate.close()
         }
