@@ -5,6 +5,7 @@ Samples for [kmp-tor][url-kmp-tor]. Note that all dependencies used are defined 
 
 ### Samples
 - [compose](samples/compose/README.md): Android, iOS, Jvm (Desktop)
+- [javafx](samples/javafx/README.md): Jvm (Desktop)
 
 [badge-license]: https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat
 

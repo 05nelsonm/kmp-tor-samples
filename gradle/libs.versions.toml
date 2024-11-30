@@ -4,6 +4,7 @@ androidx-test-runner        = "1.5.2"
 
 gradle-android              = "8.2.2"
 gradle-compose              = "1.6.11"
+gradle-javafx               = "0.1.0"
 gradle-kmp-configuration    = "0.3.2"
 gradle-kotlin               = "2.0.21"
 
@@ -33,6 +34,7 @@ kmp-tor-resource-android-unit-test-tor = { module = "io.matthewnelson.kmp-tor:re
 kmp-tor-runtime = { module = "io.matthewnelson.kmp-tor:runtime", version.ref = "kmp-tor-runtime" }
 kmp-tor-runtime-serviceui = { module = "io.matthewnelson.kmp-tor:runtime-service-ui", version.ref = "kmp-tor-runtime" }
 
+kotlinx-coroutines-javafx = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-javafx", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 
@@ -40,6 +42,7 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 android-app = { id = "com.android.application", version.ref = "gradle-android" }
 android-library = { id = "com.android.library", version.ref = "gradle-android" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "gradle-kotlin" }
+javafx = { id = "org.openjfx.javafxplugin", version.ref = "gradle-javafx" }
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "gradle-compose" }
 kmp-tor-resource-frameworks = { id = "io.matthewnelson.kmp.tor.resource-frameworks", version.ref = "kmp-tor-resource" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "gradle-kotlin" }
