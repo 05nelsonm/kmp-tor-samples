@@ -18,6 +18,10 @@ plugins {
     alias(libs.plugins.android.library) apply(false)
     alias(libs.plugins.compose.compiler) apply(false)
     alias(libs.plugins.jetbrains.compose) apply(false)
-    alias(libs.plugins.kmp.tor.resource.frameworks)
     alias(libs.plugins.kotlin.multiplatform) apply(false)
+
+    // For iOS device some setup is needed to incorporate the LibTor.framework
+    // that is expected to be present at runtime.
+    // See: https://github.com/05nelsonm/kmp-tor-resource/blob/master/library/resource-frameworks-gradle-plugin/README.md
+    alias(libs.plugins.kmp.tor.resource.frameworks)
 }

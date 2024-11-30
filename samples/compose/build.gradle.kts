@@ -23,6 +23,11 @@ plugins {
     id("configuration")
 }
 
+private val compose: ComposeExtension get() = extensions.getByType()
+
+// Using https://github.com/05nelsonm/gradle-kmp-configuration-plugin extension to set things
+// up. You would (obviously) need to adapt things to your build setup, but this gives a rough
+// idea to grok the concept.
 kmpConfiguration {
     configure {
         androidApp {
@@ -41,6 +46,8 @@ kmpConfiguration {
                 }
 
                 packaging {
+                    // Utilizing kmp-tor-resource:resource-exec-tor for Android here, so
+                    // must unpack jniLibs to application's nativeLibDir on installation.
                     jniLibs.useLegacyPackaging = true
 
                     resources {
@@ -48,6 +55,7 @@ kmpConfiguration {
                     }
                 }
 
+                // Setup ABI splits
                 splits {
                     abi {
                         isEnable = true
@@ -72,6 +80,8 @@ kmpConfiguration {
                     // w/o it via the `kmp-tor:runtime-service` dependency,
                     // or just use the `kmp-tor:runtime` from commonMain to
                     // do no service.
+                    //
+                    // See: https://github.com/05nelsonm/kmp-tor/blob/master/library/runtime-service/README.md
                     implementation(libs.kmp.tor.runtime.serviceui)
                 }
 
@@ -94,11 +104,15 @@ kmpConfiguration {
             compileTargetCompatibility = JavaVersion.VERSION_11
         }
 
-        jvm("desktop") {
+        jvm(targetName = "desktop") {
             target {
                 compose.extensions.getByType<DesktopExtension>().application {
                     mainClass = "io.matthewnelson.kmp.tor.sample.compose.MainKt"
 
+                    // TODO: Setup excludes for distributions to minimize app size.
+                    //  - .deb only needs `**/tor/native/linux-*/**
+                    //  - .dmg only needs `**/tor/native/macos/**`
+                    //  - .msi only needs `**/tor/native/mingw/**`
                     nativeDistributions {
                         targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
                         packageName = "io.matthewnelson.kmp.tor.sample.compose"
@@ -109,8 +123,12 @@ kmpConfiguration {
 
             sourceSetMain {
                 dependencies {
-                    implementation(libs.kotlinx.coroutines.swing)
                     implementation(compose.dependencies.desktop.currentOs)
+
+                    // Even though compose is being used, we want to use kmp-tor's
+                    // OnEvent.Executor.Main type for the observers. If this was a
+                    // JavaFX app, you'd want to define the JavaFX coroutine dependency.
+                    implementation(libs.kotlinx.coroutines.swing)
                 }
             }
 
@@ -128,7 +146,11 @@ kmpConfiguration {
             }
         }
 
+        // For iOS device some setup is needed to incorporate the LibTor.framework
+        // that is expected to be present at runtime.
+        // See: https://github.com/05nelsonm/kmp-tor-resource/blob/master/library/resource-frameworks-gradle-plugin/README.md
         iosArm64 { configure() }
+
         iosSimulatorArm64 { configure() }
         iosX64 { configure() }
 
@@ -150,7 +172,13 @@ kmpConfiguration {
                     // TorRuntime
                     implementation(libs.kmp.tor.runtime)
 
-                    // Pre-compiled tor binary resources to provide to TorRuntime
+                    // Pre-compiled tor binary resources to provide to TorRuntime.Environment.Build
+                    //
+                    // Could express them individually per target for whatever implementation type
+                    // you wish to use for that platform, but being lazy here and just including both
+                    // in commonMain as publications have all targets defined but only implement their
+                    // respective `getOrCreate` functionality for the supported platforms (e.g. no
+                    // implementation of Exec for iOS, no implementation of NoExec for Node.js).
                     implementation(libs.kmp.tor.resource.exec.tor)
                     implementation(libs.kmp.tor.resource.noexec.tor)
                 }
@@ -164,5 +192,3 @@ kmpConfiguration {
         }
     }
 }
-
-private val compose: ComposeExtension get() = extensions.getByType()

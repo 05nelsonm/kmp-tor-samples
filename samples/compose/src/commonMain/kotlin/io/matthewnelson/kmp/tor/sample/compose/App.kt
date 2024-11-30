@@ -17,6 +17,12 @@ import io.matthewnelson.kmp.tor.runtime.core.OnFailure
 import io.matthewnelson.kmp.tor.runtime.core.OnSuccess
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+// All button actions use TorRuntime.enqueue callback API instead of
+// the Sync or Async extension functions. It is OK to throw here because
+// TorRuntime has a static observer defined for RuntimeEvent.ERROR that
+// will pipe the resulting UncaughtException to the UI.
+private val ThrowOnFailure = OnFailure { throw it }
+
 @Composable
 @Preview
 fun App() {
@@ -47,9 +53,9 @@ fun App() {
                 Button(
                     onClick = {
                         Tor.enqueue(
-                            Action.StartDaemon,
-                            { throw it },
-                            OnSuccess.noOp()
+                            action = Action.StartDaemon,
+                            onFailure = ThrowOnFailure,
+                            onSuccess = OnSuccess.noOp(),
                         )
 
                         showContent = !showContent
@@ -65,9 +71,9 @@ fun App() {
                     Button(
                         onClick = {
                             Tor.enqueue(
-                                Action.StopDaemon,
-                                OnFailure { throw it },
-                                OnSuccess.noOp(),
+                                action = Action.StopDaemon,
+                                onFailure = ThrowOnFailure,
+                                onSuccess = OnSuccess.noOp(),
                             )
                         }
                     ) {
@@ -79,9 +85,9 @@ fun App() {
                     Button(
                         onClick = {
                             Tor.enqueue(
-                                Action.StartDaemon,
-                                OnFailure { throw it },
-                                OnSuccess.noOp(),
+                                action = Action.StartDaemon,
+                                onFailure = ThrowOnFailure,
+                                onSuccess = OnSuccess.noOp(),
                             )
                         }
                     ) {
@@ -93,9 +99,9 @@ fun App() {
                     Button(
                         onClick = {
                             Tor.enqueue(
-                                Action.RestartDaemon,
-                                OnFailure { throw it },
-                                OnSuccess.noOp(),
+                                action = Action.RestartDaemon,
+                                onFailure = ThrowOnFailure,
+                                onSuccess = OnSuccess.noOp(),
                             )
                         }
                     ) {
