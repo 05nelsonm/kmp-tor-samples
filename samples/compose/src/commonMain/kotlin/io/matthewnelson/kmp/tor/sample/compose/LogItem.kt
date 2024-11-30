@@ -19,6 +19,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.neverEqualPolicy
 import io.matthewnelson.kmp.tor.runtime.RuntimeEvent
+import kotlinx.coroutines.*
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 
@@ -36,7 +37,7 @@ class LogItem private constructor(
     override fun hashCode(): Int = id.hashCode()
     override fun toString(): String = data
 
-    /*
+    /**
     * Nothing thread safe about this. Must be utilized from UI thread.
     * */
     class Holder private constructor(
@@ -45,15 +46,18 @@ class LogItem private constructor(
     ) {
 
         val items = mutableStateOf(ArrayDeque<LogItem>(), neverEqualPolicy())
+        private val main = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
         private var id: Long = 0
 
         fun add(event: RuntimeEvent<*>, data: String) {
-            items.value = items.value.let { items ->
-                val id = id++
-                if (items.size > MAX_ITEMS) items.removeFirst()
-                items.add(LogItem(id, event, data))
-                items
+            main.launch {
+                items.value = items.value.let { items ->
+                    val id = id++
+                    if (items.size > MAX_ITEMS) items.removeFirst()
+                    items.add(LogItem(id, event, data))
+                    items
+                }
             }
         }
 

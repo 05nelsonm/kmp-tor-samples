@@ -1,11 +1,10 @@
 # kmp-tor-samples
 [![badge-license]][url-license]
 
-Samples for [kmp-tor][url-kmp-tor]
+Samples for [kmp-tor][url-kmp-tor]. Note that all dependencies used are defined in [libs.versions.toml](gradle/libs.versions.toml).
 
-### Applications
-
- - [compose](samples/compose/README.md): Android, iOS, Jvm Desktop
+### Samples
+- [compose](samples/compose/README.md): Android, iOS, Jvm (Desktop)
 
 [badge-license]: https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat
 
