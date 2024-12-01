@@ -10,8 +10,8 @@ gradle-kotlin               = "2.0.21"
 
 jetbrains-lifecycle         = "2.8.0"
 
-kmp-tor-resource            = "408.12.0-SNAPSHOT"
-kmp-tor-runtime             = "2.0.0-alpha01-SNAPSHOT"
+kmp-tor-resource            = "408.12.0"
+kmp-tor-runtime             = "2.0.0-alpha01"
 kotlinx-coroutines          = "1.8.1"
 
 [libraries]
