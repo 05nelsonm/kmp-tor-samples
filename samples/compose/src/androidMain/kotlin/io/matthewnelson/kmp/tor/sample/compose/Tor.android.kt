@@ -30,8 +30,8 @@ private val AndroidEnvironment: TorRuntime.Environment by lazy {
     // Roll with all the defaults.
     //
     // Note that use of ServiceConfig here does not require any Context b/c it
-    // utilizes the androix.startup library under the hood. If you are not using
-    // the TorRuntime.Environment.Builder APIs (so no running tor in a Service),
+    // utilizes the androix.startup library under the hood. If you are using
+    // the TorRuntime.Environment.Builder APIs (so not running tor in a Service),
     // you would want to use Context here to set up directory information just as
     // you would any other platform when creating the Environment.
     ServiceConfig.newEnvironment(ResourceLoaderTorExec::getOrCreate)
