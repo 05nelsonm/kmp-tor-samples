@@ -83,7 +83,7 @@ kmpConfiguration {
                     // or just use the `kmp-tor:runtime` from commonMain to
                     // do no service.
                     //
-                    // See: https://github.com/05nelsonm/kmp-tor/blob/master/library/runtime-service/README.md
+                    // See: https://kmp-tor.matthewnelson.io/library/runtime-service-ui/index.html
                     implementation(libs.kmp.tor.runtime.serviceui)
                 }
 
@@ -168,8 +168,6 @@ kmpConfiguration {
 
             sourceSetMain {
                 dependencies {
-                    implementation(libs.jetbrains.lifecycle.runtime.compose)
-                    implementation(libs.jetbrains.lifecycle.viewmodel)
                     implementation(compose.dependencies.runtime)
                     implementation(compose.dependencies.foundation)
                     implementation(compose.dependencies.material)
