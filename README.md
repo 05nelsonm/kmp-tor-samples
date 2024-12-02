@@ -1,7 +1,9 @@
 # kmp-tor-samples
 [![badge-license]][url-license]
 
-Samples for [kmp-tor][url-kmp-tor]. Note that all dependencies used are defined in [libs.versions.toml](gradle/libs.versions.toml).
+Samples for [kmp-tor][url-kmp-tor].
+
+**Note:** All dependencies are defined in [libs.versions.toml](gradle/libs.versions.toml)
 
 ### Samples
 - [compose](samples/compose/README.md): Android, iOS, Jvm (Desktop)
