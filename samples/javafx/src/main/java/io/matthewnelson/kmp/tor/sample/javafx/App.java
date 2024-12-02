@@ -52,7 +52,7 @@ public class App extends Application {
         }
 
         File appDir = new File(rootDir, "kmp_tor_samples");
-        appDir = new File(appDir, "compose");
+        appDir = new File(appDir, "javafx");
 
         TorRuntime.Environment env = TorRuntime.Environment.Builder(
             /* workDirectory  */ new File(appDir, "kmptor"),
