@@ -8,8 +8,8 @@ gradle-javafx               = "0.1.0"
 gradle-kmp-configuration    = "0.3.2"
 gradle-kotlin               = "2.0.21"
 
-kmp-tor-resource            = "408.13.0"
-kmp-tor-runtime             = "2.0.0-alpha02"
+kmp-tor-resource            = "408.13.1"
+kmp-tor-runtime             = "2.0.0-beta01"
 kotlinx-coroutines          = "1.9.0"
 
 [libraries]
