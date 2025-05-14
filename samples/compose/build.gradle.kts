@@ -14,6 +14,7 @@
  * limitations under the License.
  **/
 import io.matthewnelson.kmp.configuration.extension.container.target.TargetIosContainer
+import io.matthewnelson.kmp.tor.resource.filterjar.KmpTorResourceFilterJarExtension
 import org.jetbrains.compose.ComposeExtension
 import org.jetbrains.compose.desktop.DesktopExtension
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
@@ -33,14 +34,14 @@ kmpConfiguration {
         androidApp {
             android {
                 namespace = "io.matthewnelson.kmp.tor.sample.compose"
-                compileSdk = 34
+                compileSdk = 35
 
                 sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
                 defaultConfig {
                     applicationId = "io.matthewnelson.kmp.tor.sample.compose"
                     minSdk = 21
-                    targetSdk = 34
+                    targetSdk = 35
                     versionCode = 1
                     versionName = "1.0.0"
 
@@ -85,6 +86,9 @@ kmpConfiguration {
                     //
                     // See: https://kmp-tor.matthewnelson.io/library/runtime-service-ui/index.html
                     implementation(libs.kmp.tor.runtime.serviceui)
+
+                    // Tor executable resources
+                    implementation(libs.kmp.tor.resource.exec.tor)
                 }
 
                 project.dependencies {
@@ -113,29 +117,22 @@ kmpConfiguration {
         }
 
         jvm(targetName = "desktop") {
-            target {
-                compose.extensions.getByType<DesktopExtension>().application {
-                    mainClass = "io.matthewnelson.kmp.tor.sample.compose.MainKt"
 
-                    // TODO: Setup excludes for distributions to minimize app size.
-                    //  - .deb only needs `**/tor/native/linux-*/**
-                    //  - .dmg only needs `**/tor/native/macos/**`
-                    //  - .msi only needs `**/tor/native/mingw/**`
-                    nativeDistributions {
-                        targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-                        packageName = "io.matthewnelson.kmp.tor.sample.compose"
-                        packageVersion = "1.0.0"
-                    }
-                }
-            }
+            // See: https://github.com/05nelsonm/kmp-tor-resource/blob/master/library/resource-filterjar-gradle-plugin/README.md
+            pluginIds(libs.plugins.kmp.tor.resource.filterjar.get().pluginId)
 
             sourceSetMain {
                 dependencies {
                     implementation(compose.dependencies.desktop.currentOs)
 
-                    // Even though compose is being used, we want to use kmp-tor's
-                    // OnEvent.Executor.Main type for the observers. If this was a
-                    // JavaFX app, you'd want to define the JavaFX coroutine dependency.
+                    // Tor executable resources
+                    implementation(libs.kmp.tor.resource.exec.tor)
+                }
+            }
+
+            sourceSetTest {
+                dependencies {
+                    // So that Dispatchers.Main will be available for tests
                     implementation(libs.kotlinx.coroutines.swing)
                 }
             }
@@ -177,16 +174,6 @@ kmpConfiguration {
 
                     // TorRuntime
                     implementation(libs.kmp.tor.runtime)
-
-                    // Pre-compiled tor binary resources to provide to TorRuntime.Environment.Build
-                    //
-                    // Could express them individually per target for whatever implementation type
-                    // you wish to use for that platform, but being lazy here and just including both
-                    // in commonMain as publications have all targets defined but only implement their
-                    // respective `getOrCreate` functionality for the supported platforms (e.g. no
-                    // implementation of Exec for iOS, no implementation of NoExec for Node.js).
-                    implementation(libs.kmp.tor.resource.exec.tor)
-                    implementation(libs.kmp.tor.resource.noexec.tor)
                 }
             }
 
@@ -195,6 +182,38 @@ kmpConfiguration {
                     implementation(kotlin("test"))
                     implementation(libs.kotlinx.coroutines.test)
                 }
+            }
+        }
+
+        // Tor non-executable resources for iOS (Exec not available)
+        kotlin {
+            sourceSets.findByName("iosMain")?.dependencies {
+                implementation(libs.kmp.tor.resource.noexec.tor)
+            }
+        }
+
+        // Configure extensions for desktop
+        kotlin {
+            if (targets.findByName("desktop") == null) return@kotlin
+
+            compose.extensions.getByType<DesktopExtension>().application {
+                mainClass = "io.matthewnelson.kmp.tor.sample.compose.MainKt"
+
+                nativeDistributions {
+                    targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Rpm)
+                    packageName = "io.matthewnelson.kmp.tor.sample.compose"
+                    packageVersion = "1.0.0"
+
+                    // https://github.com/05nelsonm/kmp-process/issues/139
+                    modules("java.management")
+                }
+            }
+
+            // Strip out all compilations of tor but the current host & architecture
+            // See: https://github.com/05nelsonm/kmp-tor-resource/blob/master/library/resource-filterjar-gradle-plugin/README.md
+            project.extensions.configure<KmpTorResourceFilterJarExtension>("kmpTorResourceFilterJar") {
+                logging.set(true)
+                keepTorCompilation(host = "current", arch = "current")
             }
         }
     }

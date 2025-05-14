@@ -17,7 +17,6 @@ package io.matthewnelson.kmp.tor.sample.compose
 
 import io.matthewnelson.kmp.tor.common.api.ExperimentalKmpTorApi
 import io.matthewnelson.kmp.tor.resource.exec.tor.ResourceLoaderTorExec
-import io.matthewnelson.kmp.tor.resource.noexec.tor.ResourceLoaderTorNoExec
 import io.matthewnelson.kmp.tor.runtime.TorRuntime
 import io.matthewnelson.kmp.tor.runtime.service.TorServiceConfig
 import io.matthewnelson.kmp.tor.runtime.service.TorServiceUI

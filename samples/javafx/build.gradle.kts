@@ -16,17 +16,15 @@
 plugins {
     application
     alias(libs.plugins.javafx)
+
+    // See: https://github.com/05nelsonm/kmp-tor-resource/blob/master/library/resource-filterjar-gradle-plugin/README.md
+    alias(libs.plugins.kmp.tor.resource.filterjar)
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 }
-
-// TODO: Setup excludes for distributions to minimize app size.
-//  - .deb only needs `**/tor/native/linux-*/**
-//  - .dmg only needs `**/tor/native/macos/**`
-//  - .msi only needs `**/tor/native/mingw/**`
 
 application {
     mainClass.set("io.matthewnelson.kmp.tor.sample.javafx.App")
@@ -45,4 +43,11 @@ dependencies {
 
     // To support use of OnEvent.Executor.Main for Observers (optional, will default to Immediate).
     implementation(libs.kotlinx.coroutines.javafx)
+}
+
+// Strip out all compilations of tor but the current host & architecture
+// See: https://github.com/05nelsonm/kmp-tor-resource/blob/master/library/resource-filterjar-gradle-plugin/README.md
+kmpTorResourceFilterJar {
+    logging.set(true)
+    keepTorCompilation(host = "current", arch = "current")
 }
