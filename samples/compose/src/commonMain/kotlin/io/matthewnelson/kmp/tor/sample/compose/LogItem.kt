@@ -46,7 +46,7 @@ class LogItem private constructor(
     ) {
 
         val items = mutableStateOf(ArrayDeque<LogItem>(), neverEqualPolicy())
-        private val main = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+        private val main = CoroutineScope(SupervisorJob() + (UI_DISPATCHER ?: Dispatchers.Main))
 
         private var id: Long = 0
 

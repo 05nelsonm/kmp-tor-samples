@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
-@file:Suppress("UNUSED_ANONYMOUS_PARAMETER")
-
 package io.matthewnelson.kmp.tor.sample.compose
 
 import io.matthewnelson.kmp.file.resolve
@@ -60,6 +58,7 @@ private object TorSocksClient: OnEvent<TorListeners> {
     // Define private clear net client for entirety of application runtime
     // to build tor client off of (so not repeatedly opening closing backing
     // threads).
+    @Suppress("unused")
     private val clearNetClient = object : SomeHttpClient {}
 
     @Volatile

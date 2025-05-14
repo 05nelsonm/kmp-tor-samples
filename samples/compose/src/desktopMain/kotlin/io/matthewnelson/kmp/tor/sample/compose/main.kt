@@ -17,12 +17,26 @@ package io.matthewnelson.kmp.tor.sample.compose
 
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import kotlinx.coroutines.CoroutineDispatcher
+import org.jetbrains.skiko.MainUIDispatcher
+import kotlin.concurrent.Volatile
 
-fun main() = application {
-    Window(
-        onCloseRequest = ::exitApplication,
-        title = "compose",
-    ) {
-        App()
+@Volatile
+private var COMPOSE_DISPATCHER: CoroutineDispatcher? = null
+
+internal actual val UI_DISPATCHER: CoroutineDispatcher? get() = COMPOSE_DISPATCHER
+
+fun main() {
+    // Lazy... but it's a sample. You should probably use constructor injection
+    // alongside something like Decompose library.
+    COMPOSE_DISPATCHER = MainUIDispatcher
+
+    application {
+        Window(
+            onCloseRequest = ::exitApplication,
+            title = "compose",
+        ) {
+            App()
+        }
     }
 }

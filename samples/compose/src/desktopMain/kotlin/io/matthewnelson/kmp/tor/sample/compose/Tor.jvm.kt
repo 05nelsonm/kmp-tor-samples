@@ -19,7 +19,6 @@ import io.matthewnelson.kmp.file.SysTempDir
 import io.matthewnelson.kmp.file.resolve
 import io.matthewnelson.kmp.file.toFile
 import io.matthewnelson.kmp.tor.resource.exec.tor.ResourceLoaderTorExec
-import io.matthewnelson.kmp.tor.resource.noexec.tor.ResourceLoaderTorNoExec
 import io.matthewnelson.kmp.tor.runtime.TorRuntime
 
 actual fun runtimeEnvironment(): TorRuntime.Environment = JvmEnvironment
