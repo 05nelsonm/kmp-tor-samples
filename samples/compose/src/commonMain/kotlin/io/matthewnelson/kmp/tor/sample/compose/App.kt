@@ -15,6 +15,7 @@ import io.matthewnelson.kmp.tor.runtime.Action
 import io.matthewnelson.kmp.tor.runtime.RuntimeEvent
 import io.matthewnelson.kmp.tor.runtime.core.OnFailure
 import io.matthewnelson.kmp.tor.runtime.core.OnSuccess
+import kotlinx.coroutines.CoroutineDispatcher
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 // All button actions use TorRuntime.enqueue callback API instead of
@@ -22,6 +23,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 // TorRuntime has a static observer defined for RuntimeEvent.ERROR that
 // will pipe the resulting UncaughtException to the UI.
 private val ThrowOnFailure = OnFailure { throw it }
+
+// Jvm desktop does not use Dispatchers.Main, so need to pass in
+// MainUiDispatcher from compose so it can be utilized everywhere.
+internal expect val UI_DISPATCHER: CoroutineDispatcher?
 
 @Composable
 @Preview
