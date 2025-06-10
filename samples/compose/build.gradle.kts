@@ -147,6 +147,7 @@ kmpConfiguration {
                 binaries.framework {
                     baseName = "ComposeApp"
                     isStatic = true
+                    binaryOption("bundleId", "io.matthewnelson.kmp.tor.sample.compose.ComposeApp")
                 }
             }
         }

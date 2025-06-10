@@ -37,7 +37,7 @@ javafx {
 dependencies {
     implementation(libs.kmp.tor.runtime)
 
-    // Alternatively, could use -exec dependency for process execution.
+    // Alternatively, could use -exec dependency for process execution. (Strongly suggested for Java).
     // Alternatively, could use the -gpl variant for GPL'd applications.
     implementation(libs.kmp.tor.resource.noexec.tor)
 
