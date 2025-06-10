@@ -111,9 +111,9 @@ kmpConfiguration {
                 }
             }
 
-            kotlinJvmTarget = JavaVersion.VERSION_11
-            compileSourceCompatibility = JavaVersion.VERSION_11
-            compileTargetCompatibility = JavaVersion.VERSION_11
+            kotlinJvmTarget = JavaVersion.VERSION_1_8
+            compileSourceCompatibility = JavaVersion.VERSION_1_8
+            compileTargetCompatibility = JavaVersion.VERSION_1_8
         }
 
         jvm(targetName = "desktop") {
