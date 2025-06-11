@@ -32,61 +32,30 @@ internal expect val UI_DISPATCHER: CoroutineDispatcher?
 @Preview
 fun App() {
     MaterialTheme(colors = darkColors()) {
-        var showContent by remember { mutableStateOf(false) }
-        val listState = rememberLazyListState()
+        Surface {
+            var showContent by remember { mutableStateOf(false) }
+            val listState = rememberLazyListState()
 
-        Box(
-            modifier = Modifier.fillMaxSize().padding(8.dp),
-            contentAlignment = Alignment.BottomCenter
-        ) {
-            AnimatedVisibility(showContent, Modifier.fillMaxHeight()) {
-                val logItems by remember { LogItem.Holder.getOrCreate(LOG_HOLDER_NAME).items }
+            Box(
+                modifier = Modifier.fillMaxSize().safeContentPadding().padding(8.dp),
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                AnimatedVisibility(showContent, Modifier.fillMaxHeight()) {
+                    val logItems by remember { LogItem.Holder.getOrCreate(LOG_HOLDER_NAME).items }
 
-                LazyColumn(
-                    modifier = Modifier.padding(bottom = 48.dp),
-                    state = listState,
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    items(count = logItems.size, key = { logItems[it].id }) { index ->
-                        val item = logItems[index]
-                        LogCardItem(item)
-                    }
-                }
-            }
-
-            if (!showContent) {
-                Button(
-                    onClick = {
-                        Tor.enqueue(
-                            action = Action.StartDaemon,
-                            onFailure = ThrowOnFailure,
-                            onSuccess = OnSuccess.noOp(),
-                        )
-
-                        showContent = !showContent
-                    }
-                ) {
-                    Text("Start Tor")
-                }
-            } else {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    Button(
-                        onClick = {
-                            Tor.enqueue(
-                                action = Action.StopDaemon,
-                                onFailure = ThrowOnFailure,
-                                onSuccess = OnSuccess.noOp(),
-                            )
-                        }
+                    LazyColumn(
+                        modifier = Modifier.padding(bottom = 48.dp),
+                        state = listState,
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
-                        Text("Stop Tor")
+                        items(count = logItems.size, key = { logItems[it].id }) { index ->
+                            val item = logItems[index]
+                            LogCardItem(item)
+                        }
                     }
+                }
 
-                    Spacer(Modifier.width(8.dp))
-
+                if (!showContent) {
                     Button(
                         onClick = {
                             Tor.enqueue(
@@ -94,23 +63,56 @@ fun App() {
                                 onFailure = ThrowOnFailure,
                                 onSuccess = OnSuccess.noOp(),
                             )
+
+                            showContent = !showContent
                         }
                     ) {
                         Text("Start Tor")
                     }
-
-                    Spacer(Modifier.width(8.dp))
-
-                    Button(
-                        onClick = {
-                            Tor.enqueue(
-                                action = Action.RestartDaemon,
-                                onFailure = ThrowOnFailure,
-                                onSuccess = OnSuccess.noOp(),
-                            )
-                        }
+                } else {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
                     ) {
-                        Text("Restart Tor")
+                        Button(
+                            onClick = {
+                                Tor.enqueue(
+                                    action = Action.StopDaemon,
+                                    onFailure = ThrowOnFailure,
+                                    onSuccess = OnSuccess.noOp(),
+                                )
+                            }
+                        ) {
+                            Text("Stop Tor")
+                        }
+
+                        Spacer(Modifier.width(8.dp))
+
+                        Button(
+                            onClick = {
+                                Tor.enqueue(
+                                    action = Action.StartDaemon,
+                                    onFailure = ThrowOnFailure,
+                                    onSuccess = OnSuccess.noOp(),
+                                )
+                            }
+                        ) {
+                            Text("Start Tor")
+                        }
+
+                        Spacer(Modifier.width(8.dp))
+
+                        Button(
+                            onClick = {
+                                Tor.enqueue(
+                                    action = Action.RestartDaemon,
+                                    onFailure = ThrowOnFailure,
+                                    onSuccess = OnSuccess.noOp(),
+                                )
+                            }
+                        ) {
+                            Text("Restart Tor")
+                        }
                     }
                 }
             }

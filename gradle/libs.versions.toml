@@ -1,15 +1,15 @@
 [versions]
-androidx-activity-compose   = "1.9.3"
+androidx-activity-compose   = "1.10.1"
 androidx-test-runner        = "1.6.2"
 
-gradle-android              = "8.7.3"
-gradle-compose              = "1.7.0"
+gradle-android              = "8.9.3"
+gradle-compose              = "1.8.1"
 gradle-javafx               = "0.1.0"
-gradle-kmp-configuration    = "0.4.0"
-gradle-kotlin               = "2.1.10"
+gradle-kmp-configuration    = "0.4.1"
+gradle-kotlin               = "2.1.21"
 
-kmp-tor-resource            = "408.16.2"
-kmp-tor-runtime             = "2.3.0"
+kmp-tor-resource            = "408.16.4"
+kmp-tor-runtime             = "2.4.0"
 kotlinx-coroutines          = "1.10.2"
 
 [libraries]
