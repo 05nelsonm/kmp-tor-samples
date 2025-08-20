@@ -16,7 +16,7 @@
 package io.matthewnelson.kmp.tor.sample.javafx;
 
 import io.matthewnelson.kmp.file.KmpFile;
-import io.matthewnelson.kmp.tor.resource.noexec.tor.ResourceLoaderTorNoExec;
+import io.matthewnelson.kmp.tor.resource.exec.tor.ResourceLoaderTorExec;
 import io.matthewnelson.kmp.tor.runtime.Action;
 import io.matthewnelson.kmp.tor.runtime.RuntimeEvent;
 import io.matthewnelson.kmp.tor.runtime.TorRuntime;
@@ -57,10 +57,7 @@ public class App extends Application {
         TorRuntime.Environment env = TorRuntime.Environment.Builder(
             /* workDirectory  */ new File(appDir, "kmptor"),
             /* cacheDirectory */ new File(new File(appDir, "cache"), "kmptor"),
-
-            // Alternatively, can utilize the kmp-tor-resource:resource-exec-tor dependency
-            // which will use Process execution under the hood (instead of JNI).
-            /* loader         */ ResourceLoaderTorNoExec::getOrCreate,
+            /* loader         */ ResourceLoaderTorExec::getOrCreate,
 
             /* block          */ b -> {
                 // Configure further...
@@ -111,10 +108,7 @@ public class App extends Application {
             b.required(TorEvent.WARN.INSTANCE);
         });
 
-        // Not absolutely necessary if you don't want to. The ResourceLoaderTorNoExec.getOrCreate
-        // function that was passed in for the TorRuntime.Environment.Builder.loader parameter sets
-        // a shutdown hook by default (can be set to false if desired) which stops tor automatically
-        // when the JVM shuts down.
+        // Not absolutely necessary if you don't want to.
         stage.setOnCloseRequest(windowEvent -> {
             runtime.enqueue(
                 /* action    */ Action.StopDaemon,

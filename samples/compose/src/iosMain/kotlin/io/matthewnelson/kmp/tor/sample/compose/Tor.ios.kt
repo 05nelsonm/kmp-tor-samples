@@ -33,7 +33,7 @@ private val IosEnvironment: TorRuntime.Environment by lazy {
         ?.toString()
         ?.ifBlank { null }
         ?.toFile()
-        ?: "".toFile().absoluteFile.resolve("Library")
+        ?: "".toFile().absoluteFile2().resolve("Library")
 
     // ../data/Library/Caches
     val caches = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, true)

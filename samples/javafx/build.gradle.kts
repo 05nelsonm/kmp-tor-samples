@@ -37,13 +37,20 @@ javafx {
 dependencies {
     implementation(libs.kmp.tor.runtime)
 
-    // Alternatively, could use -exec dependency for process execution. (Strongly suggested for Java).
+    // Tor executable resources
     // Alternatively, could use the -gpl variant for GPL'd applications.
-    implementation(libs.kmp.tor.resource.noexec.tor)
+    implementation(libs.kmp.tor.resource.exec.tor)
 
     // To support use of OnEvent.Executor.Main for Observers (optional, will default to Immediate).
     implementation(libs.kotlinx.coroutines.javafx)
 }
+
+//jlink {
+//    mergedModule {
+//        // Needed for kmp-process dependency (which is used under the hood by kmp-tor:runtime-core)
+//        requires 'java.management'
+//    }
+//}
 
 // Strip out all compilations of tor but the current host & architecture
 // See: https://github.com/05nelsonm/kmp-tor-resource/blob/master/library/resource-filterjar-gradle-plugin/README.md

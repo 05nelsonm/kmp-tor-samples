@@ -36,11 +36,6 @@ private val JvmEnvironment: TorRuntime.Environment by lazy {
         workDirectory = appDir.resolve("kmptor"),
         cacheDirectory = appDir.resolve("cache").resolve("kmptor"),
         loader = ResourceLoaderTorExec::getOrCreate,
-
-        // Can also utilize the NoExec JNI implementation if you don't want to do
-        // process execution. Downside is that you are unable to instantiate
-        // multiple instances of TorRuntime to run multiple instances of tor.
-//        loader = ResourceLoaderTorNoExec::getOrCreate,
     ) {
 
         // Configure further...
