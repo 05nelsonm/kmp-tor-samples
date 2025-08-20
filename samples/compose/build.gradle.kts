@@ -88,6 +88,7 @@ kmpConfiguration {
                     implementation(libs.kmp.tor.runtime.serviceui)
 
                     // Tor executable resources
+                    // Alternatively, could use the -gpl variant for GPL'd applications.
                     implementation(libs.kmp.tor.resource.exec.tor)
                 }
 
