@@ -34,14 +34,14 @@ kmpConfiguration {
         androidApp {
             android {
                 namespace = "io.matthewnelson.kmp.tor.sample.compose"
-                compileSdk = 35
+                compileSdk = 36
 
                 sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
                 defaultConfig {
                     applicationId = "io.matthewnelson.kmp.tor.sample.compose"
                     minSdk = 21
-                    targetSdk = 35
+                    targetSdk = 36
                     versionCode = 1
                     versionName = "1.0.0"
 
@@ -111,10 +111,6 @@ kmpConfiguration {
                     implementation(libs.androidx.test.runner)
                 }
             }
-
-            kotlinJvmTarget = JavaVersion.VERSION_1_8
-            compileSourceCompatibility = JavaVersion.VERSION_1_8
-            compileTargetCompatibility = JavaVersion.VERSION_1_8
         }
 
         jvm(targetName = "desktop") {
