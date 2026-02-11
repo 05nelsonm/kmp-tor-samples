@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+@file:Suppress("RedundantCompanionReference")
+
 package io.matthewnelson.kmp.tor.sample.compose
 
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import kotlinx.coroutines.CoroutineDispatcher
+import io.matthewnelson.kmp.log.Log
+import io.matthewnelson.kmp.log.sys.SysLog
 import org.jetbrains.skiko.MainUIDispatcher
-import kotlin.concurrent.Volatile
-
-@Volatile
-private var COMPOSE_DISPATCHER: CoroutineDispatcher? = null
-
-internal actual val UI_DISPATCHER: CoroutineDispatcher? get() = COMPOSE_DISPATCHER
 
 fun main() {
-    // Lazy... but it's a sample. You should probably use constructor injection
-    // alongside something like Decompose library.
-    COMPOSE_DISPATCHER = MainUIDispatcher
+    // Using kmp-log to dispatch TorRuntime logs to both System.{out/err} and UILog
+    Log.Root.install(log = SysLog.Debug)
+    Log.Root.install(log = UILog(main = MainUIDispatcher))
 
     application {
         Window(

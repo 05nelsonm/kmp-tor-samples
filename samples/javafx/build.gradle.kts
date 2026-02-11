@@ -35,6 +35,8 @@ javafx {
 }
 
 dependencies {
+    implementation(libs.kmp.log.sys)
+
     implementation(libs.kmp.tor.runtime)
 
     // Tor executable resources

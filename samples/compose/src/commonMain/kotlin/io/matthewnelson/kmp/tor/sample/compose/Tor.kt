@@ -16,6 +16,7 @@
 package io.matthewnelson.kmp.tor.sample.compose
 
 import io.matthewnelson.kmp.file.resolve
+import io.matthewnelson.kmp.log.Log
 import io.matthewnelson.kmp.tor.runtime.RuntimeEvent
 import io.matthewnelson.kmp.tor.runtime.TorListeners
 import io.matthewnelson.kmp.tor.runtime.TorRuntime
@@ -34,8 +35,6 @@ import kotlin.time.Duration.Companion.milliseconds
 
 // Use your favorite dependency injection here, if desired.
 expect fun runtimeEnvironment(): TorRuntime.Environment
-
-const val LOG_HOLDER_NAME = "default"
 
 // Fake HttpClient used as an example. Realistically this would be something
 // like ktor or OkHttp, etc.
@@ -100,28 +99,22 @@ val Tor: TorRuntime by lazy {
 
         // TorRuntime.Environment.BuilderScope.defaultExecutor auto-defaults
         // to OnEvent.Executor.Main whenever Dispatchers.Main is available
-        // on the system (which it is here for all platforms). LogItem.Holder
-        // has its own scope using Dispatchers.Main.immediate when adding the
+        // on the system (which it is here for all platforms). UILog has
+        // its own scope using Dispatchers.Main.immediate when adding the
         // events, so here we can express individually for all observers to
         // use Immediate instead of whatever the default is.
         val executor = OnEvent.Executor.Immediate
 
-        // Pipe all logs to UI
-        val logs = LogItem.Holder.getOrCreate(LOG_HOLDER_NAME)
-
         RuntimeEvent.entries().forEach { event ->
-            // ERROR observer **MUST** be present for
-            // UncaughtException, otherwise may cause crash.
-            if (event is RuntimeEvent.ERROR) {
-                observerStatic(event, executor) { t ->
-                    logs.add(event, t.stackTraceToString())
-                }
-            } else {
+            // Using kmp-log to dispatch all logs to installed Log instances (i.e. SysLog & UILog)
+            val log = Log.Logger.of(tag = event.name, domain = UILog.DOMAIN)
 
-                // Just toString everything else...
-                observerStatic(event, executor) { data ->
-                    logs.add(event, data.toString())
-                }
+            when (event) {
+                is RuntimeEvent.ERROR -> observerStatic(event, executor, log::e)
+                is RuntimeEvent.LOG.DEBUG -> observerStatic(event, executor, log::d)
+                is RuntimeEvent.LOG.INFO -> observerStatic(event, executor, log::i)
+                is RuntimeEvent.LOG.WARN -> observerStatic(event, executor, log::w)
+                else -> observerStatic(event, executor) { any -> log.i { any } }
             }
         }
 
@@ -133,7 +126,7 @@ val Tor: TorRuntime by lazy {
             // The default configuration that TorRuntime has will always define
             // SocksPort 9050 (if not defined here), and reassign to "auto" if 9050 is
             // unavailable on the device. For Application's, the safest thing would be to
-            // always use "auto" and let tor choose the port for you.
+            // always use "auto" and let Tor choose the port for you.
             //
             // The RuntimeEvent.LISTENERS observer API allows for setup/teardown of an HTTP
             // client with the well-defined SocketAddress for the proxy to use for it.
