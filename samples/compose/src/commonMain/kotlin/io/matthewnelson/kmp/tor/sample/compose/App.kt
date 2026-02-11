@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package io.matthewnelson.kmp.tor.sample.compose
 
 import androidx.compose.animation.AnimatedVisibility

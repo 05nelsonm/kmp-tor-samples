@@ -40,7 +40,7 @@ kmpConfiguration {
 
                 defaultConfig {
                     applicationId = "io.matthewnelson.kmp.tor.sample.compose"
-                    minSdk = 21
+                    minSdk = 23 // Compose minimum is 23, but kmp-tor:resource dependencies are 21.
                     targetSdk = 36
                     versionCode = 1
                     versionName = "1.0.0"
@@ -76,6 +76,7 @@ kmpConfiguration {
             sourceSetMain {
                 dependencies {
                     implementation(libs.androidx.activity.compose)
+                    @Suppress("DEPRECATION")
                     implementation(compose.dependencies.preview)
 
                     // Optional dependency for running in Android Foreground
@@ -93,6 +94,7 @@ kmpConfiguration {
                 }
 
                 project.dependencies {
+                    @Suppress("DEPRECATION")
                     "debugImplementation"(compose.dependencies.uiTooling)
                 }
             }
@@ -163,11 +165,17 @@ kmpConfiguration {
 
             sourceSetMain {
                 dependencies {
+                    @Suppress("DEPRECATION")
                     implementation(compose.dependencies.runtime)
+                    @Suppress("DEPRECATION")
                     implementation(compose.dependencies.foundation)
+                    @Suppress("DEPRECATION")
                     implementation(compose.dependencies.material)
+                    @Suppress("DEPRECATION")
                     implementation(compose.dependencies.ui)
+                    @Suppress("DEPRECATION")
                     implementation(compose.dependencies.components.resources)
+                    @Suppress("DEPRECATION")
                     implementation(compose.dependencies.components.uiToolingPreview)
 
                     // TorRuntime
