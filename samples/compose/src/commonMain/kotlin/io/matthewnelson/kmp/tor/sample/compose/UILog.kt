@@ -34,6 +34,9 @@ import kotlin.jvm.JvmField
 
 /**
  * Utilizing `kmp-log` in order to convert all [Log.Logger] logs from [TorRuntime] to display.
+ *
+ * **NOTE:** [Log] is not meant to be used this way. There are *several* drawbacks to this, one
+ * being if this instance gets uninstalled from [Log.Root] the UI goes away. But, this is a sample...
  * */
 class UILog(private val main: CoroutineDispatcher): Log(uid = UID, min = Level.Debug) {
 
