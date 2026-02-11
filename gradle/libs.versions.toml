@@ -8,6 +8,7 @@ gradle-jetbrains-compose    = "1.10.1"
 gradle-kmp-configuration    = "0.5.2"
 gradle-kotlin               = "2.2.21"
 
+kmp-log                     = "0.1.2"
 kmp-tor-resource            = "408.22.0"
 kmp-tor-runtime             = "2.6.0"
 kotlinx-coroutines          = "1.10.2"
@@ -19,6 +20,8 @@ androidx-test-runner        = { module = "androidx.test:runner", version.ref = "
 gradle-android              = { module = "com.android.tools.build:gradle", version.ref = "gradle-android" }
 gradle-kmp-configuration    = { module = "io.matthewnelson:gradle-kmp-configuration-plugin", version.ref = "gradle-kmp-configuration" }
 gradle-kotlin               = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "gradle-kotlin" }
+
+kmp-log-sys                 = { module = "io.matthewnelson.kmp-log:sys", version.ref = "kmp-log" }
 
 # Tor resources. Alternatively, could use the -gpl variants if you have a GPL'd app.
 kmp-tor-resource-exec-tor   = { module = "io.matthewnelson.kmp-tor:resource-exec-tor", version.ref = "kmp-tor-resource" }

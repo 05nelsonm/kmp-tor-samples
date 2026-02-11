@@ -13,33 +13,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+@file:Suppress("RedundantCompanionReference")
+
 package io.matthewnelson.kmp.tor.sample.compose
 
+import io.matthewnelson.kmp.log.Log
+import io.matthewnelson.kmp.log.sys.SysLog
+import io.matthewnelson.kmp.tor.runtime.Action
 import io.matthewnelson.kmp.tor.runtime.Action.Companion.startDaemonAsync
 import io.matthewnelson.kmp.tor.runtime.Action.Companion.stopDaemonAsync
-import io.matthewnelson.kmp.tor.runtime.RuntimeEvent
-import io.matthewnelson.kmp.tor.runtime.core.OnEvent
-import kotlinx.coroutines.*
+import io.matthewnelson.kmp.tor.runtime.core.OnFailure
+import io.matthewnelson.kmp.tor.runtime.core.OnSuccess
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.job
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withContext
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
 
-abstract class TorBaseTest {
+class TorUnitTest {
 
     @Test
     fun givenTor_whenStart_thenStarts() = runTest {
-        val tag = "TEST_OBSERVER"
-        val observers = RuntimeEvent.entries().map { event ->
-            event.observer(tag, OnEvent.Executor.Immediate) { data ->
-                println("$event - $data")
-            }
-        }.toTypedArray()
+        currentCoroutineContext().job.invokeOnCompletion {
+            Tor.enqueue(Action.StopDaemon, OnFailure.noOp(), OnSuccess.noOp())
+        }
 
-        Tor.subscribe(*observers)
-        currentCoroutineContext().job.invokeOnCompletion { Tor.unsubscribeAll(tag) }
+        Log.Root.install(SysLog.Debug)
 
-        Tor.startDaemonAsync()
-        withContext(Dispatchers.Default) { delay(1.seconds) }
-        Tor.stopDaemonAsync()
+        try {
+            Tor.startDaemonAsync()
+            withContext(Dispatchers.Default) { delay(2.seconds) }
+            Tor.stopDaemonAsync()
+        } finally {
+            Log.Root.uninstall(SysLog.Debug)
+        }
     }
 }

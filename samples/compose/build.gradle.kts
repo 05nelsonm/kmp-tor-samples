@@ -178,6 +178,8 @@ kmpConfiguration {
                     @Suppress("DEPRECATION")
                     implementation(compose.dependencies.components.uiToolingPreview)
 
+                    implementation(libs.kmp.log.sys)
+
                     // TorRuntime
                     implementation(libs.kmp.tor.runtime)
                 }

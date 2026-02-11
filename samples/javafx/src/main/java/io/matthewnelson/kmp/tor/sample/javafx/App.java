@@ -16,6 +16,8 @@
 package io.matthewnelson.kmp.tor.sample.javafx;
 
 import io.matthewnelson.kmp.file.KmpFile;
+import io.matthewnelson.kmp.log.Log;
+import io.matthewnelson.kmp.log.sys.SysLog;
 import io.matthewnelson.kmp.tor.resource.exec.tor.ResourceLoaderTorExec;
 import io.matthewnelson.kmp.tor.runtime.Action;
 import io.matthewnelson.kmp.tor.runtime.RuntimeEvent;
@@ -39,6 +41,11 @@ import java.io.File;
  * definitely look at the :samples:compose sample project.
  * */
 public class App extends Application {
+
+    public static void main(String[] args) {
+        Log.Root.install(SysLog.Debug); // kmp-log
+        launch();
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -67,15 +74,22 @@ public class App extends Application {
         env.debug = true;
 
         TorRuntime runtime = TorRuntime.Builder(env, b -> {
-            // Pipe all logs to System.out
+            // Pipe logs to System.{out/err} via kmp-log:sys (SysLog installed at App.main)
             RuntimeEvent.entries().forEach(event -> {
-                b.observerStatic(
-                    /* event    */ event,
-                    /* executor */ OnEvent.Executor.Immediate.INSTANCE,
-                    /* onEvent  */ data -> {
-                        System.out.println(data.toString());
-                    }
-                );
+
+                Log.Logger log = Log.Logger.of(/* tag = */ event.name, /* domain = */ "sample:javafx");
+
+                if (event instanceof RuntimeEvent.ERROR) {
+                    b.observerStatic(event, OnEvent.Executor.Immediate.INSTANCE, t -> log.e((Throwable) t));
+                } else if (event instanceof RuntimeEvent.LOG.DEBUG) {
+                    b.observerStatic(event, OnEvent.Executor.Immediate.INSTANCE, s -> log.d((String) s));
+                } else if (event instanceof RuntimeEvent.LOG.INFO) {
+                    b.observerStatic(event, OnEvent.Executor.Immediate.INSTANCE, s -> log.i((String) s));
+                } else if (event instanceof RuntimeEvent.LOG.WARN) {
+                    b.observerStatic(event, OnEvent.Executor.Immediate.INSTANCE, s -> log.w((String) s));
+                } else {
+                    b.observerStatic(event, OnEvent.Executor.Immediate.INSTANCE, o -> log.i(o.toString()));
+                }
             });
 
             b.config((c, environment) -> {
@@ -133,9 +147,5 @@ public class App extends Application {
             /* onFailure */ Throwable::printStackTrace,
             /* onSuccess */ OnSuccess.noOp()
         );
-    }
-
-    public static void main(String[] args) {
-        launch();
     }
 }
