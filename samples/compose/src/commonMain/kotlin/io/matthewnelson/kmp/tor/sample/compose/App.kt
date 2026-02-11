@@ -43,7 +43,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.matthewnelson.kmp.log.Log
@@ -159,40 +158,17 @@ fun App() {
 }
 
 @Composable
-private fun LogCardItem(item: UILog.Item?) {
-    var textColor = Color.White
-
-    val bg = when (item?.event) {
-        is RuntimeEvent.ERROR -> Color.Red
-        is RuntimeEvent.LOG.DEBUG -> {
-            var color = Color.Blue
-            if (item.data.startsWith("RealTorCtrl")) {
-                color = color.copy(alpha = 0.5f)
-            }
-            color
-        }
-        is RuntimeEvent.LOG.INFO -> {
-            textColor = Color.DarkGray
-            Color.Yellow
-        }
-        is RuntimeEvent.LOG.WARN -> Color.Red.copy(alpha = 0.75f)
-        is RuntimeEvent.READY -> {
-            textColor = Color.DarkGray
-            Color.Green
-        }
-        else -> Color.DarkGray
-    }
-
+private fun LogCardItem(item: UILog.Item) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = bg,
+        backgroundColor = item.colorBG,
         elevation = 8.dp
     ) {
         Text(
             modifier = Modifier.padding(4.dp),
-            text = item?.data ?: "",
+            text = item.data,
             fontSize = 12.sp,
-            color = textColor,
+            color = item.colorText,
         )
     }
 }

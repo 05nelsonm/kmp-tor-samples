@@ -19,6 +19,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.neverEqualPolicy
+import androidx.compose.ui.graphics.Color
 import io.matthewnelson.kmp.log.Log
 import io.matthewnelson.kmp.tor.runtime.RuntimeEvent
 import io.matthewnelson.kmp.tor.runtime.TorRuntime
@@ -55,8 +56,8 @@ class UILog(private val main: CoroutineDispatcher): Log(uid = UID, min = Level.D
     class Item(
         @JvmField
         val id: Long,
-        @JvmField
-        val event: RuntimeEvent<*>,
+        val colorBG: Color,
+        val colorText: Color,
         @JvmField
         val data: String,
     ) {
@@ -85,14 +86,33 @@ class UILog(private val main: CoroutineDispatcher): Log(uid = UID, min = Level.D
         // Should never be the case, but just in case.
         if (data.isEmpty()) return false
 
-        val job = scope.launch {
+        var colorText = Color.White
+        val colorBG = when (event) {
+            is RuntimeEvent.ERROR -> Color.Red
+            is RuntimeEvent.LOG.DEBUG -> if (data.startsWith("RealTorCtrl")) {
+                Color.Blue.copy(alpha = 0.5f)
+            } else {
+                Color.Blue
+            }
+            is RuntimeEvent.LOG.INFO -> {
+                colorText = Color.DarkGray
+                Color.Yellow
+            }
+            is RuntimeEvent.LOG.WARN -> Color.Red.copy(alpha = 0.75f)
+            is RuntimeEvent.READY -> {
+                colorText = Color.DarkGray
+                Color.Green
+            }
+            else -> Color.DarkGray
+        }
+
+        return scope.launch {
             val id = _id++
             val items = _items.value
             if (items.size > MAX_ITEMS) items.removeFirst()
-            items.add(Item(id, event, data))
+            items.add(Item(id, colorBG, colorText, data))
             _items.value = items
-        }
-        return job.isActive
+        }.isActive
     }
 
     override fun isLoggable(level: Level, domain: String?, tag: String): Boolean {
